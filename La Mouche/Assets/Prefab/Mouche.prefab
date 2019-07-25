@@ -93,7 +93,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9079564822553725177}
   - component: {fileID: 9079564822553725158}
-  - component: {fileID: 9079564822553725159}
   - component: {fileID: 1914845794}
   - component: {fileID: 1914845793}
   m_Layer: 0
@@ -135,21 +134,6 @@ MonoBehaviour:
   angleSpeedGain: 1
   vForward: {x: 0, y: 0, z: 1}
   angleSpeed: 1
---- !u!114 &9079564822553725159
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9079564822553725176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c75f205bca7c4c846969dca368ae60fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rayOrigin: {fileID: 9079564822553725177}
-  camera: {fileID: 9079564822326639570}
-  landObject: {fileID: 0}
 --- !u!54 &1914845794
 Rigidbody:
   m_ObjectHideFlags: 0

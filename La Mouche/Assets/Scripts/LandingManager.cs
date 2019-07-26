@@ -4,30 +4,72 @@ using UnityEngine;
 
 public class LandingManager : MonoBehaviour
 {
-    public Transform rayOrigin;
-    public Camera camera;
+    public float spriteSpeed = 0.8f;
 
-    public GameObject landObject;
+    private bool targetValid = false;
+    private Vector3 target;
+    private Vector3 landNormal;
+    private PlayerController pc;
+    private SpriteRenderer spriteRenderer;
     
 
     // Start is called before the first frame update
     void Start()
     {
-
+        pc = GetComponentInParent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        RaycastHit hit;
-        Ray ray = camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        if(Physics.Raycast(ray, out hit, 2))
+        if (targetValid)
         {
-            landObject = hit.collider.gameObject;
+            Vector3 dir = target - transform.position;
+            Transform parentTransform = transform.parent;
+
+            if(positionApproximatelyEquals(transform.position, target, 0.005f))
+            {
+                targetValid = false;
+
+                if (target.Equals(parentTransform.position))
+                {
+                    transform.position = parentTransform.position;
+                    pc.fly();
+                }
+                else
+                {
+                    Transform forwardTransform = transform.GetChild(0);
+                    Vector3 vForward = forwardTransform.position - transform.position;
+                    transform.rotation *= Quaternion.FromToRotation(vForward, -landNormal);
+
+                    pc.land();
+                }
+            }
+            else
+            {
+                transform.Translate(dir * Time.deltaTime, Space.World);
+            }
         }
-        else
-        {
-            landObject = null;
-        }
+    }
+
+    public void approach(Vector3 target, Vector3 normal)
+    {
+        this.target = target;
+        landNormal = normal;
+        targetValid = true;
+    }
+    public void approach(Vector3 target)
+    {
+        this.target = target;
+        targetValid = true;
+    }
+
+    private bool positionApproximatelyEquals(Vector3 t1, Vector3 t2, float threshold)
+    {
+        if (Mathf.Abs(t1.x - t2.x) >= threshold) return false;
+        if (Mathf.Abs(t1.y - t2.y) >= threshold) return false;
+        if (Mathf.Abs(t1.z - t2.z) >= threshold) return false;
+
+        return true;
     }
 }

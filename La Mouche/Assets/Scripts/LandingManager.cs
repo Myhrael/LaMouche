@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class LandingManager : MonoBehaviour
 {
-    public float spriteSpeed = 0.8f;
+    public float spriteSpeed = 1.5f;
+    public float goalThreshold = 0.08f;
+    public float camThreshold = 0.5f;
 
+    private bool returning;
     private bool targetValid = false;
     private Vector3 target;
     private Vector3 landNormal;
@@ -27,14 +30,16 @@ public class LandingManager : MonoBehaviour
             Vector3 dir = target - transform.position;
             Transform parentTransform = transform.parent;
 
-            if(positionApproximatelyEquals(transform.position, target, 0.005f))
+            if((returning && positionApproximatelyEquals(transform.position, target, camThreshold))
+                || positionApproximatelyEquals(transform.position, target, goalThreshold))
             {
                 targetValid = false;
 
-                if (target.Equals(parentTransform.position))
+                if (returning)
                 {
                     transform.position = parentTransform.position;
                     pc.fly();
+                    returning = false;
                 }
                 else
                 {
@@ -58,8 +63,9 @@ public class LandingManager : MonoBehaviour
         landNormal = normal;
         targetValid = true;
     }
-    public void approach(Vector3 target)
+    public void returnToCam(Vector3 target)
     {
+        returning = true;
         this.target = target;
         targetValid = true;
     }

@@ -12,55 +12,76 @@ public class AstroController : MonoBehaviour
     public float proximityTreshold = 1f;
     public float rangeIncrement = 1f;
     public float distTreshold = 8f;
-
+    public float attackCooldown = 3;
     public float speed = 1.5f;
-    
+
+    private RotateTowardsCam rotationScript;
     private Animator animator;
     private Animator flyAnim;
     private List<Transform> interactableObjects = new List<Transform>();
     private Transform target;
-    public Transform origin;
-    public bool moving;
+    private Transform origin;
+
+    private bool canAttack = true;
+    private bool timerEnabled = false;
+    private float attackTimer;
 
     // Start is called before the first frame update
     void Start()
     {
         //getInteractableObjects(interactableObjectsRoot);
+        rotationScript = GetComponentInChildren<RotateTowardsCam>();
         flyAnim = theFly.GetComponentInChildren<Animator>();
         animator = GetComponentInChildren<Animator>();
-        animator.SetInteger("angryness", 1);
+        animator.SetInteger("angryness", 2);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (timerEnabled)
+        {
+            updateTimer();
+        }
+
         Vector3 vFly = theFly.position - transform.position;
 
-        if(!flyAnim.GetBool("flying"))
+        if (!flyAnim.GetBool("flying"))
         {
+            if (vFly.magnitude <= 1.5f)
+            {
+                rotationScript.enabled = false;
+            }
+
             int mode = animator.GetInteger("angryness");
             origin = GetComponentInChildren<SpriteRenderer>().transform.GetChild(mode);
             Vector3 dir = theFly.position - origin.position;
-            Debug.Log("hit dir: " + dir.magnitude);
+            
             if (dir.magnitude > hitRange) target = theFly;
             else
             {
                 target = null;
 
-                if (flyAnim.GetBool("landed"))
+                if (flyAnim.GetBool("landed") && canAttack)
                 {
                     animator.SetBool("attack", true);
+                    canAttack = false;
                 }
             }
         }
-        else if(vFly.magnitude >= distTreshold && target == null && false)
+        else
         {
-            //Transform target = getNearbyObject(theFly, nearbyRange);
-            origin = transform;
-            Vector3 dir = theFly.position - origin.position;
+            rotationScript.enabled = true;
 
-            if (dir.magnitude >= proximityTreshold) target = theFly;
-            else target = null;
+            if (vFly.magnitude >= distTreshold && target == null && false)
+            {
+                //Transform target = getNearbyObject(theFly, nearbyRange);
+                origin = transform;
+                Vector3 dir = theFly.position - origin.position;
+
+                if (dir.magnitude >= proximityTreshold) target = theFly;
+                else target = null;
+            }
         }
 
         if(target != null)
@@ -74,15 +95,33 @@ public class AstroController : MonoBehaviour
                 transform.position += dir.normalized * Time.deltaTime * speed;
                 if (dir.magnitude <= hitRange) transform.position = targetPos;
                 //transform.position = Vector3.Lerp(transform.position, targetPos, dir.magnitude / speed);
-                moving = true;
             }
-            else
-            {
-                moving = false;
-            }
-            
         }
-    }   
+    }
+
+    public void endAttack()
+    {
+        timerEnabled = true;
+
+        if (flyAnim.GetBool("landed") && (theFly.position - origin.position).magnitude <= hitRange)
+        {
+            animator.SetBool("gotTheKill", true);
+            theFly.GetComponentInParent<PlayerController>().die();
+        }
+    }
+
+    private void updateTimer()
+    {
+        attackTimer -= Time.deltaTime;
+
+        if(attackTimer <= 0)
+        {
+            animator.SetBool("attack", false);
+            canAttack = true;
+            attackTimer = attackCooldown;
+            timerEnabled = false;
+        }
+    }
 
     private void getInteractableObjects(Transform root)
     {

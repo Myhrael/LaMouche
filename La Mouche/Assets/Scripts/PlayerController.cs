@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float landMargin = 0.05f;
     public Cinemachine.CinemachineVirtualCamera landCam;
     public Camera mainCam;
+    public Sprite deathSprite;
 
     private bool hitValid = false;
     private Vector3 landPoint;
@@ -72,6 +73,14 @@ public class PlayerController : MonoBehaviour
                 takeOff();
             }
         }
+    }
+
+    public void die()
+    {
+        Debug.Log("You died mthfckr!!");
+        GetComponentInChildren<SpriteRenderer>().sprite = deathSprite;
+        animator.enabled = false;
+        animator.SetBool("landed", false);
     }
 
     public void fly()

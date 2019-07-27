@@ -295,7 +295,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376464707}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00019438549, y: -0.000000003891207, z: -3.9999995}
+  m_LocalPosition: {x: 0.00040907683, y: -0.00000001476984, z: -3.9999995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1807015669}
@@ -489,7 +489,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089065127}
-  m_LocalRotation: {x: 1.4482993e-10, y: 0.000024332703, z: 0.000014087391, w: 1}
+  m_LocalRotation: {x: 3.326619e-10, y: 0.00005116913, z: 0.00002962439, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -688,6 +688,7 @@ MonoBehaviour:
   landMargin: 0.05
   landCam: {fileID: 1376464708}
   mainCam: {fileID: 2089065130}
+  deathSprite: {fileID: 21300000, guid: d34b34a8603e0a546bb31810e0475f81, type: 3}
 --- !u!54 &1914845794
 Rigidbody:
   m_ObjectHideFlags: 0

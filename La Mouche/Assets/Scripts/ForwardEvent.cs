@@ -6,7 +6,6 @@ public class ForwardEvent : MonoBehaviour
 {
     public void endAttack()
     {
-        Debug.Log(GetComponentInParent<AstroController>());
         GetComponentInParent<AstroController>().endAttack();
     }
 }

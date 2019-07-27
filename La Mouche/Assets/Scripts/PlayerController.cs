@@ -81,6 +81,8 @@ public class PlayerController : MonoBehaviour
         GetComponentInChildren<SpriteRenderer>().sprite = deathSprite;
         animator.enabled = false;
         animator.SetBool("landed", false);
+
+        GameManager.gm.lost();
     }
 
     public void fly()
@@ -100,14 +102,20 @@ public class PlayerController : MonoBehaviour
         approachScript.returnToCam(landCam.transform.position);
     }
 
+    public Transform getLandObject()
+    {
+        return landTransform;
+    }
+
     private void detectLanding()
     {
         RaycastHit hit;
         Vector3 dir = transform.GetChild(0).GetChild(0).position - transform.position;
         dir = dir.normalized;
         Ray ray = new Ray(transform.position, dir);
+        int layerMask = 1 << 9;
 
-        if (Physics.Raycast(ray, out hit, landDistance))
+        if (Physics.Raycast(ray, out hit, landDistance, layerMask))
         {
             landPoint = hit.point-dir*landMargin;
             landNormal = hit.normal;

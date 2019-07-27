@@ -10,7 +10,7 @@ public class ColliderCreator : MonoBehaviour
         List<GameObject> childs = new List<GameObject>();
         getChilds(transform, childs);
 
-        foreach(GameObject obj in childs)
+        foreach (GameObject obj in childs)
         {
             MeshCollider collider = obj.AddComponent<MeshCollider>() as MeshCollider;
         }
@@ -26,8 +26,8 @@ public class ColliderCreator : MonoBehaviour
     {
         foreach(Transform child in parent)
         {
-            childs.Add(child.gameObject);
-            getChilds(child, childs);
+            if(child.childCount == 0 && child.GetComponent<Collider>() == null) childs.Add(child.gameObject);
+            else getChilds(child, childs);
         }
 
         return childs;

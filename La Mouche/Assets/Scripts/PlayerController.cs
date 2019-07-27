@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     public float speed = 1;
     public float maxAngleSpeed = 2;
     public float angleSpeedGain = 1;
+    public float landDistance = 2;
+    public float landMargin = 0.05f;
     public Cinemachine.CinemachineVirtualCamera landCam;
     public Camera mainCam;
 
@@ -86,7 +88,7 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool("landed", false);
         GetComponentInChildren<LandingManager>().transform.rotation = transform.rotation;
-        approachScript.approach(transform.position);
+        approachScript.returnToCam(landCam.transform.position);
     }
 
     private void detectLanding()
@@ -96,9 +98,9 @@ public class PlayerController : MonoBehaviour
         dir = dir.normalized;
         Ray ray = new Ray(transform.position, dir);
 
-        if (Physics.Raycast(ray, out hit, 2))
+        if (Physics.Raycast(ray, out hit, landDistance))
         {
-            landPoint = hit.point-dir*0.01f;
+            landPoint = hit.point-dir*landMargin;
             landNormal = hit.normal;
             landTransform = hit.collider.transform;
             hitValid = true;

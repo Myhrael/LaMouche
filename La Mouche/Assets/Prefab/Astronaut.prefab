@@ -137,6 +137,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   theFly: {fileID: 0}
   interactableObjectsRoot: {fileID: 0}
+  hitParticle: {fileID: 2238114120425492659, guid: 37525ef157c8b7148a10677feb0b4453,
+    type: 3}
+  hitAudio:
+  - {fileID: 8300000, guid: d60dc0ee8ba0862458d8e0cf1b5e9c0d, type: 3}
+  - {fileID: 8300000, guid: 91ae6328f32ce6e4aa61a1aa7b392d5f, type: 3}
+  - {fileID: 8300000, guid: 423a146b6553e1f40a551522afa6187b, type: 3}
   hitRange: 0.05
   nearbyRange: 4
   proximityTreshold: 1
@@ -173,7 +179,7 @@ Transform:
   m_GameObject: {fileID: 1849002266740374108}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
   - {fileID: 1118570398}
   - {fileID: 84350504}

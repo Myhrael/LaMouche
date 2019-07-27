@@ -6,6 +6,8 @@ public class AstroController : MonoBehaviour
 {
     public Transform theFly;
     public Transform interactableObjectsRoot;
+    public ParticleSystem hitParticle;
+    public List<AudioClip> hitAudio = new List<AudioClip>(3);
 
     public float hitRange = 0.05f;
     public float nearbyRange = 4f;
@@ -22,9 +24,12 @@ public class AstroController : MonoBehaviour
     private Transform target;
     private Transform origin;
 
+    private AudioSource hitAudioSource = new AudioSource();
+
     private bool canAttack = true;
     private bool timerEnabled = false;
     private float attackTimer;
+    private float angryness = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -33,12 +38,17 @@ public class AstroController : MonoBehaviour
         rotationScript = GetComponentInChildren<RotateTowardsCam>();
         flyAnim = theFly.GetComponentInChildren<Animator>();
         animator = GetComponentInChildren<Animator>();
-        animator.SetInteger("angryness", 2);
+        animator.SetInteger("angryness", 0);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Mathf.Ceil(angryness) > animator.GetInteger("angryness"))
+        {
+            animator.SetInteger("angryness", (int) Mathf.Ceil(angryness));
+        }
+
         if (timerEnabled)
         {
             updateTimer();
@@ -48,7 +58,7 @@ public class AstroController : MonoBehaviour
 
         if (!flyAnim.GetBool("flying"))
         {
-            if (vFly.magnitude <= 1.5f)
+            if (vFly.magnitude <= 2.5f)
             {
                 rotationScript.enabled = false;
             }
@@ -94,19 +104,32 @@ public class AstroController : MonoBehaviour
 
                 transform.position += dir.normalized * Time.deltaTime * speed;
                 if (dir.magnitude <= hitRange) transform.position = targetPos;
-                //transform.position = Vector3.Lerp(transform.position, targetPos, dir.magnitude / speed);
             }
         }
     }
 
     public void endAttack()
     {
+        //hitAudioSource.PlayOneShot(hitAudio[animator.GetInteger("angryness")], 0.7f);
+
         timerEnabled = true;
+        Object.Instantiate(hitParticle, theFly.position, theFly.rotation);
 
         if (flyAnim.GetBool("landed") && (theFly.position - origin.position).magnitude <= hitRange)
         {
             animator.SetBool("gotTheKill", true);
             theFly.GetComponentInParent<PlayerController>().die();
+        }
+
+        DestroyObject objToDestroy = theFly.GetComponentInParent<PlayerController>().getLandObject().GetComponent<DestroyObject>();
+
+        if (objToDestroy.level <= animator.GetInteger("angryness"))
+        {
+            if (objToDestroy.level == 2)
+            {
+                GameManager.gm.won();
+            }
+            angryness += objToDestroy.destroy();
         }
     }
 

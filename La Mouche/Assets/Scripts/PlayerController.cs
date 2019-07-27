@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 1;
+    public float speed = 2;
     public float maxAngleSpeed = 2;
     public float angleSpeedGain = 1;
     public float landDistance = 2;
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
             }
 
             transform.Rotate(pitch * angleSpeed, yaw * angleSpeed, roll * angleSpeed);
-            transform.Translate(vForward * dt);
+            transform.Translate(vForward * dt * speed);
         }
 
         detectLanding();
